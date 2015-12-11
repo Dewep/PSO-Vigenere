@@ -1,0 +1,3 @@
+l attaque par force brute consiste a tester toutes les solutions possibles de mots de passe ou de cles
+c est le seul moyen de recuperer la cle dans les algorithmes les plus modernes et encore invioles comme aes
+il est peu utilise pour des mots de passe possedant un tres grand nombre de caracteres car le temps necessaire devient alors trop important
