@@ -23,15 +23,10 @@ class VigenereIndividual:
     def fitness(self):
         return self._fitness
 
-    def compute_frequency(self, message, search):
-        return round(message.count(search) / len(message) * 1000)
-
     def compute_fitness(self):
         plain = vigenere_lib.decrypt("".join(self._key), self._cipher)
-        for l in letters_frequencies:
-            self._fitness += abs(letters_frequencies[l] - self.compute_frequency(plain, l))
         for w in words_list:
-            self._fitness += plain.count(w) * 20
+            self._fitness += plain.count(w)
 
 
 def generate_individuals(cipher, key):
@@ -42,18 +37,20 @@ def generate_individuals(cipher, key):
     return individuals
 
 
-def get_solution_from_individuals(individuals, nb_turn, turn):
+def get_solution_from_individuals(individuals):
     individuals = sorted(individuals, key=lambda x: x.fitness, reverse=True)
     return individuals[0]
 
 
-def analyze(data, key_size, nb_turn):
+def analyze(data, key_size):
     key = [random.choice(string.ascii_lowercase) for _ in range(key_size)]
-    for turn in range(nb_turn):
+    while True:
         individuals = generate_individuals(data, key)
-        solution = get_solution_from_individuals(individuals, nb_turn, turn)
+        solution = get_solution_from_individuals(individuals)
+        if "".join(key) == "".join(solution.new_key):
+            break
         key = solution.new_key
-        print('Turn=%d\t\tKey=%s\t\tFitness=%d' % (turn, "".join(key), solution.fitness))
+        print('Key=%s\t\tFitness=%d' % ("".join(key), solution.fitness))
 
     print("")
     print("Key=%s" % "".join(key))
