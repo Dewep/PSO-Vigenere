@@ -28,13 +28,10 @@ class VigenereIndividual:
 
     def compute_fitness(self):
         plain = vigenere_lib.decrypt("".join(self._key), self._cipher)
-        self._fitness = 10000
         for l in letters_frequencies:
             self._fitness += abs(letters_frequencies[l] - self.compute_frequency(plain, l))
         for w in words_list:
-            self._fitness -= plain.count(w) * 20
-        if self._fitness < 0:
-            self._fitness = 0
+            self._fitness += plain.count(w) * 20
 
 
 def generate_individuals(cipher, key):
@@ -46,15 +43,8 @@ def generate_individuals(cipher, key):
 
 
 def get_solution_from_individuals(individuals, nb_turn, turn):
-    individuals = sorted(individuals, key=lambda x: x.fitness)
-    fitness_list = []
-    margin = (1 + 0.0005 * ((nb_turn - turn) * 100) / nb_turn)
-    maximum = round(individuals[0].fitness * margin)
-    for i in individuals:
-        if i.fitness > maximum + 1:
-            break
-        fitness_list.append(i)
-    return random.choice(fitness_list)
+    individuals = sorted(individuals, key=lambda x: x.fitness, reverse=True)
+    return individuals[0]
 
 
 def analyze(data, key_size, nb_turn):
